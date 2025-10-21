@@ -39,11 +39,33 @@ if __name__ == "__main__":
 
     # 5) Test a query
     # results = store.query("What is attention mechanism?", top_k=3)
-    results = store.query("What should you do first if someone is injured in an auto accident?", top_k=3)
-    print(results)
+    # results = store.query("What should you do first if someone is injured in an auto accident?", top_k=3)
+
+    # print(results)
 
     # 6) Optional: RAG pipeline
     # rag_search = RAGSearch()
     # query = "What is attention mechanism?"
     # summary = rag_search.search_and_summarize(query, top_k=3)
     # print("Summary:", summary)
+
+    from src.search__ import RAGSearch  # make sure this points to your updated class
+
+    # Initialize the RAG pipeline with a local model
+    # backend="ollama" uses a model pulled by Ollama (e.g., mistral, phi3, llama3)
+    # backend="hf"     uses a Hugging Face model (e.g., microsoft/phi-3-mini-4k-instruct)
+    rag_search = RAGSearch(
+        persist_dir=FAISS_DIR,
+        backend="ollama",       # or "hf"
+        model_name="phi3",      # e.g., "mistral", "llama3", "microsoft/phi-3-mini-4k-instruct"
+    )
+
+    # Ask a question
+    query = "What should you do first if someone is injured in an auto accident?"
+    query = 'Does my policy cover rental cars or towing?'
+    query = "Should I contact my insurance company first or wait for the police report?"
+
+    summary = rag_search.search_and_summarize(query, top_k=3)
+
+    print("\n=== RAG Summary ===")
+    print(summary)
